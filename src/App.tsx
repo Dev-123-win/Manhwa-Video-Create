@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback } from 'react';
-import { ManhwaPanel, VoiceOption, PanelTiming, EditedClip } from './types';
+import { ManhwaPanel, VoiceOption, EditedClip } from './types';
 import { generateScript, generateVoiceover, generateTimings } from './services/geminiService';
 import { animatePanels } from './services/animationService';
 import Stepper from './components/Stepper';

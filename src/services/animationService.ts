@@ -34,11 +34,13 @@ The output should be ONLY the modified image with no text remaining. Do not add 
     });
 
     const imagePart = response.candidates?.[0]?.content?.parts?.find(part => part.inlineData);
-    if (!imagePart || !imagePart.inlineData) {
-        throw new Error("AI failed to return an inpainted image.");
+    const inlineData = imagePart?.inlineData;
+
+    if (!inlineData || typeof inlineData.data !== 'string' || typeof inlineData.mimeType !== 'string') {
+        throw new Error("AI failed to return an inpainted image with valid data and mimeType.");
     }
 
-    return { base64Data: imagePart.inlineData.data, mimeType: imagePart.inlineData.mimeType };
+    return { base64Data: inlineData.data, mimeType: inlineData.mimeType };
 }
 
 // AI call to get crop coordinates for key subjects in the panel
