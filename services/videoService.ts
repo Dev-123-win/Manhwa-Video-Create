@@ -230,6 +230,6 @@ export async function renderVideo(
     }
     
 
-    // Fix: Cast window to 'any' to access Blob, resolving TS error when 'dom' lib is not included.
-    return new (window as any).Blob([data], { type: 'video/mp4' });
+    // Fix: Cast the data to Uint8Array to satisfy the strict Blob constructor type.
+    return new (window as any).Blob([data as Uint8Array], { type: 'video/mp4' });
 }
