@@ -196,5 +196,9 @@ export async function renderVideo(
         console.error("Could not clean up all files, but proceeding.", e);
     }
     
-    return new Blob([data as Uint8Array], { type: 'video/mp4' });
+    // Create a new Uint8Array from the data. This creates a copy with a
+    // standard ArrayBuffer, resolving the strict type mismatch with the
+    // Blob constructor that occurs in some build environments.
+    const blobData = new Uint8Array(data);
+    return new Blob([blobData], { type: 'video/mp4' });
 }
