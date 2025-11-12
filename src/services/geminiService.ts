@@ -157,7 +157,7 @@ Provide only the JSON array as your response.
     });
 
     try {
-        const jsonText = response.text.trim();
+        const jsonText = (response.text || '[]').trim();
         const timings: PanelTiming[] = JSON.parse(jsonText);
         // Basic validation
         if (!Array.isArray(timings) || timings.some(t => typeof t.panel !== 'number' || typeof t.startTime !== 'number')) {

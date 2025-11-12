@@ -15,9 +15,7 @@ const App: React.FC = () => {
   const [step, setStep] = useState(1);
   const [panels, setPanels] = useState<ManhwaPanel[]>([]);
   const [script, setScript] = useState<string>('');
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [panelTimings, setPanelTimings] = useState<PanelTiming[]>([]);
   const [editedClips, setEditedClips] = useState<EditedClip[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
@@ -27,9 +25,7 @@ const App: React.FC = () => {
     setPanels(newPanels);
     // When panels change, invalidate all subsequent steps.
     setScript('');
-    setAudioUrl(null);
     setAudioBlob(null);
-    setPanelTimings([]);
     setEditedClips([]);
   };
   
@@ -66,16 +62,16 @@ const App: React.FC = () => {
     setLoadingMessage('Generating voiceover... This may take a moment.');
     try {
       const { audioBlob: blob, audioUrl: url } = await generateVoiceover(script, voice);
-      setAudioUrl(url);
       setAudioBlob(blob);
 
       setLoadingMessage('Synchronizing audio and images...');
       const audio = new Audio(url);
       audio.onloadedmetadata = async () => {
+        // Revoke the object URL once we have the duration to prevent memory leaks
+        URL.revokeObjectURL(url);
         try {
           const duration = audio.duration;
           const timings = await generateTimings(script, panels.length, duration);
-          setPanelTimings(timings);
           
           setLoadingMessage('Performing AI video edits...');
           const clips = await animatePanels(panels, timings, duration, (msg) => setLoadingMessage(`Performing AI video edits... (${msg})`));
@@ -92,6 +88,7 @@ const App: React.FC = () => {
         }
       };
       audio.onerror = () => {
+        URL.revokeObjectURL(url);
         setIsLoading(false);
         alert("Could not load audio metadata.");
       }
@@ -118,9 +115,7 @@ const App: React.FC = () => {
     setStep(1);
     setPanels([]);
     setScript('');
-    setAudioUrl(null);
     setAudioBlob(null);
-    setPanelTimings([]);
     setEditedClips([]);
   };
   

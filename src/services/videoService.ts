@@ -196,5 +196,5 @@ export async function renderVideo(
         console.error("Could not clean up all files, but proceeding.", e);
     }
     
-    return new Blob([data], { type: 'video/mp4' });
+    return new Blob([data as Uint8Array], { type: 'video/mp4' });
 }

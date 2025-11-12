@@ -89,7 +89,8 @@ async function getSubjectCrops(inpaintedBase64: string, mimeType: string, imageU
             });
 
             try {
-                const crops: Omit<CropRect, 'id'>[] = JSON.parse(response.text.trim());
+                const jsonText = (response.text || '[]').trim();
+                const crops: Omit<CropRect, 'id'>[] = JSON.parse(jsonText);
                  // Validate and clamp crop values to be within image boundaries
                 const validatedCrops = crops.map(c => {
                     const x = Math.max(0, c.x);
