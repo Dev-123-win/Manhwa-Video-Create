@@ -1,0 +1,7 @@
+{
+  "name": "Manhwa Video Creator",
+  "description": "An AI-powered application to create manhwa explanation videos. Upload manhwa panels, generate a script and voiceover using Gemini, and preview the final video.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
