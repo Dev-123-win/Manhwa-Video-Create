@@ -199,6 +199,6 @@ export async function renderVideo(
     // Create a new Uint8Array from the data. This creates a copy with a
     // standard ArrayBuffer, resolving the strict type mismatch with the
     // Blob constructor that occurs in some build environments.
-    const blobData = new Uint8Array(data);
+    const blobData = new Uint8Array(data as Uint8Array);
     return new Blob([blobData], { type: 'video/mp4' });
 }
